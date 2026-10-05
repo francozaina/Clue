@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0f0808; /* Dark base */
+    font-family: 'Press Start 2P', cursive;
+    color: #e8d08c; /* Gold text */
+    overflow: hidden;
+}
+
+h1, h2, h3 {
+    text-shadow: 2px 2px 0px #000;
+}
+
+/* UI Overlays */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, #3a0d0d 0%, #0a0202 100%);
+    z-index: 10;
+}
+
+.panel {
+    background: rgba(20, 5, 5, 0.8);
+    border: 4px solid #8c6a25;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 10px #000, 0 0 20px #000;
+    text-align: center;
+}
+
+input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-family: 'Press Start 2P', cursive;
+    background: #000;
+    color: #fff;
+    border: 2px solid #8c6a25;
+    outline: none;
+    font-size: 12px;
+}
+
+button {
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 10px 5px;
+    font-family: 'Press Start 2P', cursive;
+    background: #8c6a25;
+    color: #1a0a0a;
+    border: 2px solid #e8d08c;
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: transform 0.1s, background 0.2s;
+}
+
+button:hover {
+    background: #e8d08c;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+#lobby ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#lobby li {
+    background: #2a0a0a;
+    margin: 5px 0;
+    padding: 8px;
+    border: 1px solid #8c6a25;
+    font-size: 10px;
+}
+
+/* HUD */
+#hud {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+#task-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.7);
+    border: 2px solid #8c6a25;
+    padding: 10px;
+}
+
+#task-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+#progress-bar {
+    display: none;
+    width: 200px;
+    height: 20px;
+    background: #333;
+    border: 2px solid #fff;
+    margin-top: 5px;
+}
+
+#progress-fill {
+    height: 100%;
+    background: #0f0;
+    width: 0%;
+    transition: width 0.3s;
+}
+
+#controls-hint {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.7);
+    border: 2px solid #555;
+    padding: 10px;
+    font-size: 10px;
+    text-align: right;
+    line-height: 1.5;
+}
+
+#sabotage-btn {
+    display: none;
+    pointer-events: auto;
+    position: absolute;
+    bottom: 80px;
+    right: 20px;
+    background: #a00;
+    color: white;
+    border-color: #f00;
+}
+
+#role-reveal {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 20;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#role-reveal h1 { font-size: 40px; margin-bottom: 20px; }
+#role-reveal p { font-size: 18px; color: #fff; }
+
+#game-over {
+    display: none;
+    z-index: 30;
+}
+
+#game-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}

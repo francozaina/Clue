@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clue of the Masked</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <!-- Game Container (Canvas goes here) -->
+    <div id="game-container"></div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="overlay">
+        <div class="panel">
+            <h1>Clue of the Masked</h1>
+            <p style="font-size: 10px; margin-bottom: 20px;">Supervivencia Victoriana 3D</p>
+            
+            <input type="text" id="input-name" placeholder="Tu Nombre" maxlength="10">
+            <button id="btn-host">Crear Sala (Host)</button>
+            
+            <div style="margin: 20px 0; border-bottom: 1px solid #8c6a25;"></div>
+            
+            <input type="text" id="input-lobby" placeholder="ID de la Sala">
+            <button id="btn-join">Unirse a Sala</button>
+        </div>
+    </div>
+
+    <!-- Lobby -->
+    <div id="lobby" class="overlay" style="display: none;">
+        <div class="panel">
+            <h2 id="lobby-id-display">Sala: </h2>
+            <p style="font-size: 10px;">Esperando jugadores...</p>
+            
+            <ul id="player-list"></ul>
+            
+            <button id="btn-start" style="display: none; background: #2a8; color: #fff; border-color: #5f5;">Iniciar Partida</button>
+        </div>
+    </div>
+
+    <!-- Role Reveal -->
+    <div id="role-reveal"></div>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div id="task-container">
+            <div id="task-text">Tareas: 0 / 0</div>
+            <div id="progress-bar"><div id="progress-fill"></div></div>
+        </div>
+        
+        <button id="sabotage-btn">Apagón (Espacio)</button>
+        
+        <div id="controls-hint">
+            <span style="color:#e8d08c">MOVIMIENTO:</span> W A S D / Flechas<br>
+            <span style="color:#e8d08c">INTERACTUAR:</span> E<br>
+            <span id="action-btn" style="color:#f55"></span>
+        </div>
+    </div>
+
+    <!-- Game Over -->
+    <div id="game-over" class="overlay">
+        <!-- Content set by JS -->
+    </div>
+
+    <!-- Game Logic -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
