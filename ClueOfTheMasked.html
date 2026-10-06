@@ -131,18 +131,18 @@
         { a: [28,335],  b: [28,255],  ext: 1 },
         { a: [28,255],  b: [65,215],  ext: 1 },
         { a: [65,215],  b: [110,215], ext: 1 },
-        { a: [110,118], b: [110,225], ext: 1, splits: [215] },
+        { a: [110,118], b: [110,252], ext: 1, splits: [215] },
         // ---- Interiores ----
-        { a: [293,118], b: [293,252] },
+        { a: [293,118], b: [293,252], gaps: [[180,215]] },
         { a: [463,118], b: [463,252] },
         { a: [553,118], b: [553,252] },
-        { a: [140,252], b: [925,252], gaps: [[255,290],[300,335],[510,545],[563,597]], splits: [293,463,553,605,815] },
-        { a: [293,252], b: [293,415], gaps: [[258,300]], splits: [318] },
+        { a: [110,252], b: [925,252], gaps: [[300,335],[510,545],[563,597]], splits: [293,463,553,605,815] },
+        { a: [293,252], b: [293,415], gaps: [[275,295]], splits: [318] },
         { a: [293,318], b: [636,318], gaps: [[338,392]], splits: [413,576,605] },
         { a: [413,318], b: [413,435], gaps: [[325,358]] },
         { a: [576,318], b: [576,405] },
         { a: [636,318], b: [636,405], gaps: [[345,377]] },
-        { a: [605,252], b: [605,318], gaps: [[256,293]] },
+        { a: [605,252], b: [605,318], gaps: [[275,295]] },
         { a: [815,66],  b: [815,252], gaps: [[113,145],[195,222]], splits: [170] },
         { a: [815,170], b: [925,170] }
     ];
@@ -773,7 +773,7 @@
                     this.wallPiece(p0, p1, T, DOOR_H, WALL_H, uStart, 0, 0, true);
                     this.doorCasing(p0, p1, T);
                 } else {
-                    this.wallPiece(p0, p1, T, 0, WALL_H, uStart, t0 === 0 ? T / 2 : 0, t1 === 1 ? T / 2 : 0, false);
+                    this.wallPiece(p0, p1, T, 0, WALL_H, uStart, 0, 0, false);
                     this.segs.push({ ax: p0[0] * S, az: p0[1] * S, bx: p1[0] * S, bz: p1[1] * S, r: T / 2 });
                 }
             }
@@ -805,7 +805,7 @@
             const off = T / 2 + 0.2;
             const rp = roomAt(f.mx + f.nx * off, f.mz + f.nz * off), rn = roomAt(f.mx - f.nx * off, f.mz - f.nz * off);
             const mP = rp ? this.mats[rp.id].wall : this.extMat, mN = rn ? this.mats[rn.id].wall : this.extMat;
-            const mesh = new THREE.Mesh(g, [this.jambMat, this.jambMat, this.jambMat, this.jambMat, mP, mN]);
+            const mesh = new THREE.Mesh(g, [mP, mP, mP, mP, mP, mN]);
             mesh.position.set(f.mx + f.ux * shift, y0 + h / 2, f.mz + f.uz * shift);
             mesh.rotation.y = f.rot;
             this.scene.add(mesh);
@@ -832,24 +832,29 @@
 
         doorCasing(p0, p1, T) {
             const f = this.frame(p0, p1);
-            const off = T / 2 + 0.2;
-            for (const side of [1, -1]) {
-                const room = roomAt(f.mx + f.nx * off * side, f.mz + f.nz * off * side);
-                if (!room) continue;
-                const mat = this.jambMat;
-                const d = T / 2 + 0.04;
-                const put = (geo, along, y) => {
-                    const m = new THREE.Mesh(geo, mat);
-                    m.position.set(f.mx + f.ux * along + f.nx * d * side, y, f.mz + f.uz * along + f.nz * d * side);
-                    m.rotation.y = f.rot; this.scene.add(m);
-                };
-                const postG = new THREE.BoxGeometry(0.14, DOOR_H + 0.14, 0.08);
-                put(postG, -(f.L / 2 + 0.07), (DOOR_H + 0.14) / 2);
-                put(postG, (f.L / 2 + 0.07), (DOOR_H + 0.14) / 2);
-                put(new THREE.BoxGeometry(f.L + 0.36, 0.06, 0.12), 0, DOOR_H + 0.17);
-                put(new THREE.BoxGeometry(0.2, 0.26, 0.1), -(f.L / 2 + 0.07), 0.13);
-                put(new THREE.BoxGeometry(0.2, 0.26, 0.1), (f.L / 2 + 0.07), 0.13);
-            }
+            const mat = this.jambMat;
+            const put = (geo, along, y) => {
+                const m = new THREE.Mesh(geo, mat);
+                m.position.set(f.mx + f.ux * along, y, f.mz + f.uz * along);
+                m.rotation.y = f.rot; this.scene.add(m);
+            };
+            
+            const postG = new THREE.BoxGeometry(0.14, DOOR_H + 0.14, T + 0.14);
+            put(postG, -(f.L / 2 + 0.04), (DOOR_H + 0.14) / 2);
+            put(postG, (f.L / 2 + 0.04), (DOOR_H + 0.14) / 2);
+            
+            const topJambG = new THREE.BoxGeometry(f.L, 0.06, T + 0.14);
+            put(topJambG, 0, DOOR_H - 0.03);
+            
+            const topFrameG = new THREE.BoxGeometry(f.L, 0.14, T + 0.14);
+            put(topFrameG, 0, DOOR_H + 0.07);
+            
+            const decoLintel = new THREE.BoxGeometry(f.L + 0.36, 0.06, T + 0.20);
+            put(decoLintel, 0, DOOR_H + 0.17);
+            
+            const plinthG = new THREE.BoxGeometry(0.2, 0.26, T + 0.18);
+            put(plinthG, -(f.L / 2 + 0.04), 0.13);
+            put(plinthG, (f.L / 2 + 0.04), 0.13);
         }
 
         addWindow(wd) {
@@ -871,7 +876,7 @@
                 obj.rotation.y = rot; this.scene.add(obj);
             };
             const base = T_EXT / 2;
-            put(new THREE.Mesh(new THREE.PlaneGeometry(W - 0.08, H - 0.08), this.glassMat), 0, (y0 + y1) / 2, base + 0.01);
+            put(new THREE.Mesh(new THREE.PlaneGeometry(W, H), this.glassMat), 0, (y0 + y1) / 2, base + 0.01);
             put(new THREE.Mesh(new THREE.BoxGeometry(0.12, H, 0.09), this.jambMat), -W / 2, (y0 + y1) / 2, base + 0.045);
             put(new THREE.Mesh(new THREE.BoxGeometry(0.12, H, 0.09), this.jambMat), W / 2, (y0 + y1) / 2, base + 0.045);
             put(new THREE.Mesh(new THREE.BoxGeometry(W + 0.24, 0.14, 0.09), this.jambMat), 0, y1 + 0.07, base + 0.045);
